@@ -1,0 +1,23 @@
+body {
+    background-color: #13161c;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#input-title {
+    background: transparent;
+    color: white;
+}
+
+#input-content {
+    background: transparent;
+    color: white;
+}
+
+#create-post {
+    border: 10;
+    border-color: white;
+}
