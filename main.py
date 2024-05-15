@@ -12,7 +12,12 @@ class Post(BaseModel):
     title: str
     content: str
 
-posts_examples = [{'title': 'This is my first post', 'content': 'some interesting content'}, {'title': 'A clickbait title', 'content': 'Generic content'}]
+posts_examples = [{'title': 'This is my first post', 'content': 'some interesting content','id': 1}, {'title': 'A clickbait title', 'content': 'Generic content','id': 2}]
+
+def find_post(id):
+    for post in posts_examples:
+        if post['id'] == id:
+            return post
 
 @app.get("/")
 def root():
@@ -24,4 +29,10 @@ def get_posts():
 
 @app.post("/posts")
 def create_post(post: Post):
+    posts_examples.append(post)
     return {'post created:': f'title {post.title} content: {post.content}'}
+
+@app.get("/posts/{id}")
+def get_one_post(id: int):
+    post = find_post(id)
+    return {"post_detail": post}

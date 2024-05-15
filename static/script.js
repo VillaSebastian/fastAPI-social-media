@@ -91,5 +91,5 @@ function createPost(event) {
     `;
     postList.appendChild(postElement);
 
-    console.log('function called')
+    getPosts()
 }

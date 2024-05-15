@@ -1,23 +1,82 @@
+/* Body styles */
 body {
-    background-color: #13161c;
-    color: white;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #222;
+    color: #eee;
+}
+
+/* Header styles */
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Main styles */
+main {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+/* Section styles */
+section {
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 45%;
+}
+
+/* Form styles */
+form {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+}
+
+input[type="text"],
+textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #444;
+    color: #eee;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #444;
+    color: #eee;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Post styles */
+.post {
+    border-bottom: 1px solid #555;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+
+.post-title {
+    color: #eee;
+}
+
+.post-content {
+    color: #ccc;
+}
+
+footer {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-}
-
-#input-title {
-    background: transparent;
-    color: white;
-}
-
-#input-content {
-    background: transparent;
-    color: white;
-}
-
-#create-post {
-    border: 10;
-    border-color: white;
 }
