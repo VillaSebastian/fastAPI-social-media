@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from pydantic import BaseModel
+from random import randint
 
 app = FastAPI()
 
@@ -29,10 +30,19 @@ def get_posts():
 
 @app.post("/posts")
 def create_post(post: Post):
+    post = post.dict()
+    post['id'] = randint(1, 1000000)
     posts_examples.append(post)
-    return {'post created:': f'title {post.title} content: {post.content}'}
+    return {'post created:': f'title {post["title"]} content: {post["content"]}'}
 
 @app.get("/posts/{id}")
 def get_one_post(id: int):
     post = find_post(id)
     return {"post_detail": post}
+
+@app.delete("/posts/{id}")
+def delete_post(id: int):
+    post = find_post(id)
+    if post:
+        posts_examples.remove(post)
+    return {"Post removed succesfully"}
