@@ -46,3 +46,11 @@ def delete_post(id: int):
     if post:
         posts_examples.remove(post)
     return {"Post removed succesfully"}
+
+@app.patch("/posts/{id}")
+def update_post(id: int, updated_post: Post):
+    for post in posts_examples:
+        if post['id'] == id:
+            post['title'] = updated_post.title
+            post['content'] = updated_post.content
+    return {"Post updated succesfully"}
