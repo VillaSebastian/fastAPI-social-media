@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from pydantic import BaseModel
@@ -28,7 +28,7 @@ def root():
 def get_posts():
     return {'data': posts_examples}
 
-@app.post("/posts")
+@app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
     post = post.dict()
     post['id'] = randint(1, 1000000)
@@ -36,16 +36,20 @@ def create_post(post: Post):
     return {'post created:': f'title {post["title"]} content: {post["content"]}'}
 
 @app.get("/posts/{id}")
-def get_one_post(id: int):
+def get_one_post(id: int, response: Response):
     post = find_post(id)
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
+        detail=f'post with id {id} was not found')  
     return {"post_detail": post}
 
-@app.delete("/posts/{id}")
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(id: int):
     post = find_post(id)
-    if post:
-        posts_examples.remove(post)
-    return {"Post removed succesfully"}
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
+    posts_examples.remove(post)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 @app.patch("/posts/{id}")
 def update_post(id: int, updated_post: Post):
@@ -53,4 +57,4 @@ def update_post(id: int, updated_post: Post):
         if post['id'] == id:
             post['title'] = updated_post.title
             post['content'] = updated_post.content
-    return {"Post updated succesfully"}
+    return {"Message": "Post updated succesfully"}

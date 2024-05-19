@@ -81,7 +81,7 @@ function getPosts() {
             });
         })
         .catch(error => {
-            console.error('There was a problem with the Fetch request:', error);
+            console.error('There was a problem with the Get request:', error);
         })
 }
 
@@ -133,7 +133,7 @@ function createPost(event) {
     })
     .catch(error => {
         // Handle any errors that occur during the Fetch request
-        console.error('There was a problem with the Fetch request:', error);
+        console.error('There was a problem with the Post request:', error);
     });
 }
 
@@ -152,19 +152,19 @@ function deletePost(postId) {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            return response.json(); // Parse the JSON response
+            // return response.json(); // Parse the JSON response
         })
         .then(data => {
             console.log('Post deleted successfully:', data);
             // Remove the deleted post from the UI
             const postElement = document.getElementById(postId);
             if (postElement) {
-                postElement.parentElement.remove(); // Remove the post's parent element
+                postElement.remove(); // Remove the post's parent element
             }
             getPosts()
         })
         .catch(error => {
-            console.error('There was a problem with the Fetch request:', error);
+            console.error('There was a problem with the Delete request:', error);
         });
 }
 
@@ -215,6 +215,6 @@ function updatePost(postId, updatedData) {
             getPosts();
         })
         .catch(error => {
-            console.error('There was a problem with the Fetch request:', error);
+            console.error('There was a problem with the Patch request:', error);
         });
 }
