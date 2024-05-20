@@ -53,11 +53,13 @@ def root():
 @app.get("/posts")
 def get_posts():
     # Fetch and print data from the table
+    conn = sqlite3.connect('social_media.db')
     cursor = conn.cursor()
     rows = cursor.execute("SELECT * FROM posts").fetchall()
     print(rows)
     posts = [{"id": row[0], "title": row[1], "content": row[2], "created_at": row[3]} for row in rows]
     cursor.close()
+    conn.close()
     return {'data': posts}
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
