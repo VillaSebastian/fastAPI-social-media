@@ -3,11 +3,37 @@ from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
 from pydantic import BaseModel
 from random import randint
+import sqlite3
+
 
 app = FastAPI()
-
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+# Connect to the database (or create it if it doesn't exits)
+conn = sqlite3.connect('social_media.db')
+
+# Create a cursos object to execute SQL queries
+cursor = conn.cursor()
+    
+# Create a table posts (if it doesn't exist)
+cursor.execute('''CREATE TABLE IF NOT EXISTS posts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+               title TEXT NOT NULL,
+               content TEXT NOT NULL,
+               created_at TEXT DEFAULT current_timestamp
+                )''')
+
+# Insert data into the table
+# cursor.execute("INSERT INTO posts (title, content) VALUES (?, ?)", ('This is my first post', 'some interesting content'))
+
+# Commit the changes
+conn.commit()
+
+# Close the cursos and connection
+cursor.close()
+# conn.close()
+
 
 class Post(BaseModel):
     title: str
@@ -26,7 +52,13 @@ def root():
 
 @app.get("/posts")
 def get_posts():
-    return {'data': posts_examples}
+    # Fetch and print data from the table
+    cursor = conn.cursor()
+    rows = cursor.execute("SELECT * FROM posts").fetchall()
+    print(rows)
+    posts = [{"id": row[0], "title": row[1], "content": row[2], "created_at": row[3]} for row in rows]
+    cursor.close()
+    return {'data': posts}
 
 @app.post("/posts", status_code=status.HTTP_201_CREATED)
 def create_post(post: Post):
