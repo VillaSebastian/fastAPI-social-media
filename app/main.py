@@ -1,34 +1,15 @@
 from fastapi import FastAPI, Response, status, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from app.schemas import Post
+from app.database import set_up_database
 import sqlite3
 
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-
-# Connect to the database (or create it if it doesn't exits)
-conn = sqlite3.connect('social_media.db')
-cursor = conn.cursor()
-# Create a table posts (if it doesn't exist)
-cursor.execute('''CREATE TABLE IF NOT EXISTS posts (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-               title TEXT NOT NULL,
-               content TEXT NOT NULL,
-               created_at TEXT DEFAULT current_timestamp
-                )''')
-# Commit and close the connection
-conn.commit()
-cursor.close()
-conn.close()
-
-
-class Post(BaseModel):
-    title: str
-    content: str
-
+set_up_database()
 
 @app.get("/")
 def root():
@@ -65,7 +46,6 @@ def get_one_post(id: int, response: Response):
     """Fetch and return a post by ID."""
     conn = sqlite3.connect('social_media.db')
     cursor = conn.cursor()
-    print('The id is', id, 'and the type is', type(id))
     row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
@@ -73,21 +53,6 @@ def get_one_post(id: int, response: Response):
     cursor.close()
     conn.close()
     return {"post_detail": post}
-
-
-@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int):
-    """Delete a post by ID."""
-    conn = sqlite3.connect('social_media.db')
-    cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
-    if row is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
-    row = cursor.execute('DELETE FROM posts WHERE id = ?', (id,)).fetchone()
-    conn.commit()
-    cursor.close()
-    conn.close()
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @app.patch("/posts/{id}")
@@ -103,3 +68,18 @@ def update_post(id: int, updated_post: Post):
     cursor.close()
     conn.close()
     return {"Message": "Post updated successfully"}
+
+
+@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id: int):
+    """Delete a post by ID."""
+    conn = sqlite3.connect('social_media.db')
+    cursor = conn.cursor()
+    row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
+    if row is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
+    row = cursor.execute('DELETE FROM posts WHERE id = ?', (id,)).fetchone()
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
