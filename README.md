@@ -34,9 +34,14 @@ How to use the project:
 
 1. Run the live server:
 ```
-$ uvicorn main:app 
+$ uvicorn app.main:app
 ```
 
 2. By default the uvicorn server will run in http://127.0.0.1:8000
 
 3. Meanwhile the automatic documentation provided by SwaggerUI can be found in http://127.0.0.1:8000/docs
+
+4. For running the tests just run the following command:
+```
+$ pytest -v
+```
