@@ -8,9 +8,9 @@ def set_up_database():
     # Create a table posts (if it doesn't exist)
     cursor.execute('''CREATE TABLE IF NOT EXISTS posts (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                content TEXT NOT NULL,
-                created_at TEXT DEFAULT current_timestamp
+                    title TEXT NOT NULL,
+                    content TEXT NOT NULL,
+                    created_at TEXT DEFAULT current_timestamp
                     )''')
 
     # Commit and close the connection

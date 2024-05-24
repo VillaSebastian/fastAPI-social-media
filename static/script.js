@@ -37,6 +37,7 @@ function getPosts() {
                         <p>${post.content}</p>
                         <p>Post: <span>${post.id}</span></p>
                         <button id="${post.id}" class="delete-post-btn">Delete Post</button>
+                        <span>Created at: ${post.created_at}</span>
                     </div>
                 `;
                 postList.appendChild(postElement);
@@ -71,12 +72,6 @@ function getPosts() {
                     <button id="cancel-${postId}" onclick="cancelEdit(${postId}, '${originalTitle}', '${originalContent}')">Cancel</button>
                     `;
                     postContentElement.insertAdjacentHTML('beforeend', buttonsHTML);
-
-                    /* const updatedContent = prompt('Enter the updated content:'); // You can use a more sophisticated UI for editing
-                    if (updatedContent !== null) { // User clicked "OK"
-                    const updatedData = { content: updatedContent }; // Prepare the updated data
-                    updatePost(postId, updatedData); // Call the updatePost function
-                    } */
                 });
             });
         })
