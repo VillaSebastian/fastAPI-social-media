@@ -4,3 +4,6 @@ __pycache__/
 
 # SQLite
 *.db
+
+# Pytest
+.pytest_cache/
