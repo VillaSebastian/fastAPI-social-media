@@ -56,14 +56,6 @@ def create_post(post: Post, db: Session = Depends(get_db)):
     """Create a new post."""
     db.execute(text("INSERT INTO posts (title, content) VALUES (:title, :content)"), {"title": post.title, "content": post.content})
     db.commit()
-    """
-    conn = sqlite3.connect('social_media.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO posts (title, content) VALUES (?, ?)", (post.title, post.content))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    """
     return {'Message': 'Post created successfully'}
 
 
@@ -74,17 +66,6 @@ def get_one_post(id: int, db: Session = Depends(get_db)):
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
     post = {"id": {row.id}, "title": {row.title}, "content": {row.content}, "created_at": {row.created_at}}
-
-    """
-    conn = sqlite3.connect('social_media.db')
-    cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
-    if row is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
-    post = {"id": row[0], "title": row[1], "content": row[2], "created_at": row[3]}
-    cursor.close()
-    conn.close()
-    """
     return {"post_detail": post}
 
 
@@ -96,18 +77,6 @@ def update_post(id: int, updated_post: Post, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
     db.execute(text("UPDATE posts SET title = :title, content = :content WHERE id = :id"), {"title": updated_post.title, "content": updated_post.content, "id": id})
     db.commit()
-
-    """
-    conn = sqlite3.connect('social_media.db')
-    cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
-    if row is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
-    cursor.execute('UPDATE posts SET title = ?, content = ? WHERE id = ?', (updated_post.title, updated_post.content, id))
-    conn.commit()
-    cursor.close()
-    conn.close()
-    """
     return {"Message": "Post updated successfully"}
 
 
@@ -119,16 +88,4 @@ def delete_post(id: int, db : Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
     db.execute(text("DELETE FROM posts WHERE id = :id"), {"id": id})
     db.commit()
-
-    """
-    conn = sqlite3.connect('social_media.db')
-    cursor = conn.cursor()
-    row = cursor.execute('SELECT * FROM posts WHERE id = ?', (id,)).fetchone()
-    if row is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
-    row = cursor.execute('DELETE FROM posts WHERE id = ?', (id,)).fetchone()
-    conn.commit()
-    cursor.close()
-    conn.close()
-    """
     return Response(status_code=status.HTTP_204_NO_CONTENT)
