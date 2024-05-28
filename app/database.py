@@ -19,9 +19,14 @@ def get_db():
 def set_up_database():
     with engine.connect() as conn:
         conn.execute(text('''CREATE TABLE IF NOT EXISTS posts (
-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            id INTEGER PRIMARY KEY,
                             title TEXT NOT NULL,
                             content TEXT NOT NULL,
                             created_at TEXT DEFAULT current_timestamp
+                            )'''))
+        conn.execute(text('''CREATE TABLE IF NOT EXISTS users (
+                            id INTEGER PRIMARY KEY,
+                            email TEXT NOT NULL UNIQUE,
+                            password TEXT NOT NULL
                             )'''))
         conn.commit()
