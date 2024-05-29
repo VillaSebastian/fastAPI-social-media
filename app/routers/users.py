@@ -3,6 +3,7 @@ from fastapi import APIRouter, Response, status, HTTPException, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.database import get_db
+from app.utils import hash_password
 
 router = APIRouter(
     prefix="/users",
@@ -13,8 +14,9 @@ router = APIRouter(
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     """Create a new User by email and password"""
+    hashed_password = hash_password(user.password)
     db.execute(text("INSERT INTO users (email, password) VALUES (:email, :password)"),
-                    {"email": user.email, "password": user.password})
+                    {"email": user.email, "password": hashed_password})
     db.commit()
     new_user = db.execute(text("SELECT * FROM users WHERE email = :email"), {"email": user.email}).fetchone()
     if new_user is None:
@@ -37,8 +39,9 @@ def update_user(id: int, user: schemas.UserCreate, db: Session = Depends(get_db)
     existing_user = db.execute(text("SELECT * FROM users WHERE id = :id"), {"id": id}).fetchone()
     if existing_user is None:
         raise HTTPException(status_code=400, detail=f'User with id: {id} was not found')
+    hashed_password = hash_password(user.password)
     db.execute(text("UPDATE users SET email = :email, password = :password WHERE id = :id"),
-                    {"email": user.email, "password": user.password, "id": id})
+                    {"email": user.email, "password": hashed_password, "id": id})
     db.commit()
     updated_user = db.execute(text("SELECT * FROM users WHERE id = :id"), {"id": id}).fetchone()
     return updated_user
