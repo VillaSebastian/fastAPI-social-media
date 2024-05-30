@@ -1,5 +1,10 @@
+import pytest
+from app.main import app
+from app.database import get_db
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
+from fastapi.testclient import TestClient
+
 
 DATABASE_URL = "sqlite:///./test_social_media.db"
 
@@ -36,3 +41,13 @@ def drop_database():
         conn.execute(text("DROP TABLE IF EXISTS posts"))
         conn.execute(text("DROP TABLE IF EXISTS users"))
         conn.commit()
+
+
+@pytest.fixture
+def client():
+    # Run code before tests run
+    app.dependency_overrides[get_db] = override_get_db
+    drop_database()
+    set_up_database()
+    yield TestClient(app)
+    # Run code after tests run

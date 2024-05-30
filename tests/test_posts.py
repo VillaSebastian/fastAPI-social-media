@@ -1,21 +1,6 @@
-import pytest
-from app.main import app
-from app.database import get_db
-from tests.database import override_get_db, set_up_database, drop_database
 from fastapi import status
 from fastapi.testclient import TestClient
-
-
-app.dependency_overrides[get_db] = override_get_db
-
-
-@pytest.fixture
-def client():
-    # Run code before tests run
-    drop_database()
-    set_up_database()
-    yield TestClient(app)
-    # Run code after tests run
+from tests.database import client
 
 
 def test_create_post(client: TestClient):
@@ -72,7 +57,6 @@ def test_update_post(client: TestClient):
     response = client.post("/posts", json=invalid_post_data)
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     assert "detail" in response.json()
-
 
 def test_delete_post(client: TestClient):
     # Successful post creation
