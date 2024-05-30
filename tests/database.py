@@ -1,15 +1,15 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///./social_media.db"
+DATABASE_URL = "sqlite:///./test_social_media.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Dependency
-def get_db():
-    db = SessionLocal()
+def override_get_db():
+    db = TestSessionLocal()
     try:
         yield db
     finally:
@@ -29,4 +29,10 @@ def set_up_database():
                             password TEXT NOT NULL,
                             created_at TEXT DEFAULT current_timestamp
                             )'''))
+        conn.commit()
+
+def drop_database():
+    with engine.connect() as conn:
+        conn.execute(text("DROP TABLE IF EXISTS posts"))
+        conn.execute(text("DROP TABLE IF EXISTS users"))
         conn.commit()

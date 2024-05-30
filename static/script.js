@@ -22,7 +22,7 @@ function getPosts() {
         .then(posts => {
             postList.innerHTML = '';
 
-            posts.data.forEach(post => {
+            posts.forEach(post => {
                 const postElement = document.createElement('div');
                 postElement.id = post.id
                 postElement.classList.add('post');
