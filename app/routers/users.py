@@ -14,6 +14,10 @@ router = APIRouter(
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     """Create a new User by email and password"""
+    existing_user = db.execute(text("SELECT * FROM users WHERE email = :email"), {"email": user.email}).fetchone()
+    if existing_user:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'This email is already registered')
+
     hashed_password = hash_password(user.password)
     db.execute(text("INSERT INTO users (email, password) VALUES (:email, :password)"),
                     {"email": user.email, "password": hashed_password})

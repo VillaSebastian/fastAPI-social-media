@@ -12,7 +12,7 @@ class PostCreate(PostBase):
 
 class Post(PostBase):
     id: int
-    # owner_id: int
+    user_id: int
     created_at: datetime
 
 
@@ -26,3 +26,14 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+
+
+class UserLogin(UserCreate):
+    pass
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: int | None = None

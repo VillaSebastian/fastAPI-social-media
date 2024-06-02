@@ -3,6 +3,7 @@ from fastapi import APIRouter, Response, status, HTTPException, Depends
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 from app.database import get_db
+from app.security import get_current_user
 
 router = APIRouter(
     prefix="/posts",
@@ -18,15 +19,15 @@ def get_posts(db: Session = Depends(get_db)):
 
 
 @router.post("", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Create a new post."""
-    post = db.execute(text("INSERT INTO posts (title, content) VALUES (:title, :content) RETURNING *"),
-                        {"title": post.title, "content": post.content}).fetchone()
+    post = db.execute(text("INSERT INTO posts (title, content, user_id) VALUES (:title, :content, :user_id) RETURNING *"),
+                        {"title": post.title, "content": post.content, "user_id": current_user.id}).fetchone()
     db.commit()
     return post
 
 
-@router.get("/{id}",response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.Post)
 def get_one_post(id: int, db: Session = Depends(get_db)):
     """Fetch and return a post by ID."""
     post = db.execute(text("SELECT * FROM posts WHERE id = :id"), {"id": id}).fetchone()
