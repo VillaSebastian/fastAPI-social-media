@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Register - My Social Media App{% endblock %}
+
+{% block content %}
+<section>
+  <h2>Create a New Account</h2>
+  <form id="register-form">
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+
+    <button type="submit">Register</button>
+  </form>
+</section>
+{% endblock %}

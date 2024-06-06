@@ -49,11 +49,13 @@ def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends
 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id: int, db : Session = Depends(get_db)):
+def delete_post(id: int, db : Session = Depends(get_db), current_user = Depends(get_current_user)):
     """Delete a post by ID."""
-    row = db.execute(text("SELECT * FROM posts WHERE id = :id"), {"id": id}).fetchone()
-    if row is None:
+    post = db.execute(text("SELECT * FROM posts WHERE id = :id"), {"id": id}).fetchone()
+    if post is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'The post {id} was not found')
+    elif post.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized to perform requested action")
     db.execute(text("DELETE FROM posts WHERE id = :id"), {"id": id})
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

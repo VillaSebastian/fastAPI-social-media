@@ -1,88 +1,94 @@
-/* Body styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
     background-color: #222;
     color: #eee;
+    font-family: Arial, sans-serif;
 }
 
-/* Header styles */
 header {
     background-color: #333;
     color: #fff;
-    padding: 20px;
     text-align: center;
 }
 
-/* Main styles */
-main {
+nav ul {
     display: flex;
-    justify-content: space-around;
-    padding: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0;
+    padding-left: 24px;
 }
 
-/* Section styles */
-section {
-    background-color: #333;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 45%;
+nav ul li {
+    margin: 0px 20px;
 }
 
-/* Form styles */
-form {
-    display: flex;
-    flex-direction: column;
+nav ul li a {
+    text-decoration: none; /* Remove underline from links */
+    color: #fff;
+    padding: 10px 15px; /* Padding around links */
+    display: block; /* Make the link fill the list item */
 }
 
-input[type="text"],
-textarea {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #444;
-    color: #eee;
+nav ul li a:hover {
+    background-color: #ddd; /* Change background on hover */
+    color: #000; /* Link color on hover */
 }
 
-button {
-    padding: 10px;
-    background-color: #444;
-    color: #eee;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #555;
+footer {
+    position:absolute;
+        bottom: 0px;
 }
 
 /* Post styles */
 .post {
-    border-bottom: 1px solid #555;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+    border: 1px solid #444;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+    background-color: #333;
 }
 
 .post-header {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
 }
 
 .post-title {
-    color: #eee;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
 }
 
 .post-content {
+    font-size: 16px;
+    margin-bottom: 10px;
     color: #ccc;
 }
 
-footer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.post-footer {
+    font-size: 12px;
+    color: #888;
+}
+
+.user-id {
+    margin-right: 15px;
+}
+
+.created-at {
+    color: #999;
 }
