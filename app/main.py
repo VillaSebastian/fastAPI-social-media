@@ -39,19 +39,19 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     """Serve the home.html template."""
-    return templates.TemplateResponse("home.html", {"request": request})
+    return templates.TemplateResponse(request, "home.html")
 
 @app.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
     """Serve the register.html template."""
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse(request, "register.html")
 
 @app.get("/login", response_class=HTMLResponse)
 async def login(request: Request):
     """Serve the login.html template."""
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(request, "login.html")
 
 @app.get("/view/posts", response_class=HTMLResponse)
 async def posts(request: Request):
     """Serve the posts.html template."""
-    return templates.TemplateResponse("posts.html", {"request": request})
+    return templates.TemplateResponse(request, "posts.html")
