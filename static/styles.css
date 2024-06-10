@@ -92,3 +92,9 @@ footer {
 .created-at {
     color: #999;
 }
+
+/* Remove underline decoration for links */
+.clickable-post {
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent */
+}

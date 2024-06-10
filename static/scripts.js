@@ -74,6 +74,10 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(posts => {
             posts.forEach(post => {
+                const postLink = document.createElement('a');
+                postLink.classList.add('clickable-post');
+                postLink.setAttribute('href', `http://127.0.0.1:8000/view/posts/${post.id}`);
+
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
                 postElement.innerHTML = `
@@ -88,8 +92,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="created-at">Created at: ${post.created_at}</span>
                 </div>
                 `;
-                postsContainer.appendChild(postElement);
+                postLink.appendChild(postElement);
+                postsContainer.appendChild(postLink);
             });
+        })
+    }
+
+    const singlePostContainer = document.getElementById('single-post-container');
+    if (singlePostContainer) {
+        var postId = window.location.pathname.split('/')[3];
+        fetch(`http://127.0.0.1:8000/posts/${postId}`)
+        .then(response => post = response.json())
+        .then(post => {
+            singlePostContainer.innerHTML = `
+            <div class="post-header">
+                <!-- <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic"> -->
+                <span class="username">Posted by: ${post.user_id}</span>
+            </div>
+            <div class="post-title">${post.title}</div>
+            <div class="post-content">${post.content}</div>
+            <div class="post-footer">
+                <!-- <span class="user-id">User ID: ${post.user_id}</span> -->
+                <span class="created-at">Created at: ${post.created_at}</span>
+            </div>
+            `;
         })
     }
 });

@@ -55,3 +55,8 @@ async def login(request: Request):
 async def posts(request: Request):
     """Serve the posts.html template."""
     return templates.TemplateResponse(request, "posts.html")
+
+@app.get("/view/posts/{id}", response_class=HTMLResponse)
+async def post_id(request: Request):
+    """Serve the posts_id.html template."""
+    return templates.TemplateResponse(request, "post_detail.html")
