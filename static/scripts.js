@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 const data = await response.json();
                 sessionStorage.setItem('accessToken', data.access_token);
-                window.location.href = data.url;
+                window.location.pathname = '/view/posts'
             } catch (error) {
                 console.error('Could not login user:', error.message);
                 // Display error message to the user
@@ -63,6 +63,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (errorMessageElement) {
                     errorMessageElement.textContent = error.message;
                     errorMessageElement.style.display = 'block';
+                }
+            }
+        });
+    }
+
+    const postForm = document.getElementById('post-form');
+    if (postForm) {
+        postForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const title = formData.get('input-title');
+            const content = formData.get('input-content');
+            const token = window.sessionStorage.getItem('accessToken');
+
+            if (confirm("Do you really want to submit this post?")) {
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/posts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({title, content})
+                    });
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail);
+                    }
+                    const data = await response.json();
+                    console.log('Post created successfully:', data);
+                    location.reload();
+                } catch (error) {
+                    console.error('Could not create post:', error.message);
+                    // Display error message to the user
+                    const errorMessageElement = document.getElementById('error-message');
+                    if (errorMessageElement) {
+                        errorMessageElement.textContent = error.message;
+                        errorMessageElement.style.display = 'block';
+                    }
                 }
             }
         });

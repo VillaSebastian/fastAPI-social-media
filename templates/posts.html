@@ -3,7 +3,15 @@
 {% block title %}Home - My Social Media App{% endblock %}
 
 {% block content %}
-<section>
+<section id="create-post">
+  <form id="post-form" action="">
+      <input type="text" id="input-title" name="input-title" placeholder="Enter your title" required><br>
+      <textarea id="input-content" name="input-content" placeholder="Write your post here..." required></textarea><br>
+      <button type="submit" id="create-post-button">Create Post</button>
+  </form>
+</section>
+
+<section id="post-list">
   <h2>Latest Posts</h2>
   <div id="posts-container">
     <!-- Latest posts will be dynamically loaded here -->
