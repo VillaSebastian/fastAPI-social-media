@@ -1,0 +1,25 @@
+# Ignore log files
+*.log
+
+# Ignore Git files
+.git
+.gitignore
+
+# Ignore __pycache__ directories
+__pycache__/
+
+# pytest cache
+.pytest_cache/
+
+# Ignore README file
+README.md
+
+# Ignore SQLite database files
+*.db
+
+# Ignore virtual environment directories
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
