@@ -15,6 +15,7 @@ __pycache__/
 README.md
 
 # Ignore SQLite database files
+db/
 *.db
 
 # Ignore virtual environment directories

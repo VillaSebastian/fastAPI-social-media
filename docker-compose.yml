@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/usr/src/app
+      - db_data:/usr/src/app/db
+    environment:
+      - DATABASE_URL=sqlite:///usr/src/app/db/database.db
+
+volumes:
+  db_data:

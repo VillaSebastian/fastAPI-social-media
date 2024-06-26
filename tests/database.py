@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
 
 
-DATABASE_URL = "sqlite:///./test_social_media.db"
+DATABASE_URL = "sqlite:///./db/test_social_media.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 
