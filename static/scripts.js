@@ -147,6 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="post-header">
                 <!-- <img src="profile-pic.jpg" alt="Profile Picture" class="profile-pic"> -->
                 <span class="username">Posted by: ${post.user_id}</span>
+                <button id="edit-button" style="display: none;">Edit Post</button>
+                <button id="delete-button" style="display: none;">Delete Post</button>
             </div>
             <div class="post-title">${post.title}</div>
             <div class="post-content">${post.content}</div>
@@ -155,6 +157,85 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="created-at">Created at: ${post.created_at}</span>
             </div>
             `;
+            const token = window.sessionStorage.getItem('accessToken');
+            const currentUserId = jwt_decode(token).user_id;
+            if (currentUserId === post.user_id) {
+                document.getElementById('edit-button').style.display = 'block';
+            }
+            document.getElementById('edit-button').addEventListener('click', () => {
+                enableEditMode(post);
+            });
+
+            document.getElementById('delete-button').addEventListener('click', () => {
+                deletePost(postId);
+            });
         })
     }
 });
+
+function enableEditMode(post) {
+    const postTitle = document.querySelector('.post-title');
+    const postContent = document.querySelector('.post-content');
+    const editButton = document.getElementById('edit-button');
+    const deleteButton = document.getElementById('delete-button');
+
+    postTitle.innerHTML = `<input type="text" id="title-input" value="${post.title}">`;
+    postContent.innerHTML = `<textarea id="content-input">${post.content}</textarea>`;
+
+    editButton.textContent = 'Save Changes';
+    editButton.removeEventListener('click', enableEditMode);
+    editButton.addEventListener('click', () => saveChanges(post.id));
+
+    deleteButton.style.display = 'block';
+}
+
+function saveChanges(postId) {
+    console.log('Function saveChanges called with postId:', postId); // Debugging
+    const updatedTitle = document.getElementById('title-input').value;
+    const updatedContent = document.getElementById('content-input').value;
+    console.log('Updated Title:', updatedTitle); // Debugging
+    console.log('Updated Content:', updatedContent); // Debugging
+    debugger;
+
+    fetch(`http://127.0.0.1:8000/posts/${postId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${window.sessionStorage.getItem('accessToken')}`
+        },
+        body: JSON.stringify({
+            title: updatedTitle,
+            content: updatedContent
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json(); // Parse the JSON response
+    })
+    .then(post => {
+        document.querySelector('.post-title').innerText = post.title;
+        document.querySelector('.post-content').innerText = post.content;
+        document.getElementById('edit-button').textContent = 'Edit Post';
+        document.getElementById('delete-button').style.display = 'none';
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function deletePost(postId) {
+    fetch(`http://127.0.0.1:8000/posts/${postId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${window.sessionStorage.getItem('accessToken')}`
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            window.location.href = '/'; // Redirect to home page after deletion
+        } else {
+            console.error('Failed to delete post');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
