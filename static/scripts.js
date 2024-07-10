@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const password = event.target.password.value;
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/users', {
+                const response = await fetch('/users', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('password', password);
 
             try {
-                const response = await fetch('http://127.0.0.1:8000/login', {
+                const response = await fetch('/login', {
                     method: 'POST',
                     body: formData,
                 });
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (confirm("Do you really want to submit this post?")) {
                 try {
-                    const response = await fetch('http://127.0.0.1:8000/posts', {
+                    const response = await fetch('/posts', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -109,13 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const postsContainer = document.getElementById('posts-container');
     if (postsContainer) {
-        fetch('http://127.0.0.1:8000/posts')
+        fetch('/posts')
         .then(response => response.json())
         .then(posts => {
             posts.forEach(post => {
                 const postLink = document.createElement('a');
                 postLink.classList.add('clickable-post');
-                postLink.setAttribute('href', `http://127.0.0.1:8000/view/posts/${post.id}`);
+                postLink.setAttribute('href', `/view/posts/${post.id}`);
 
                 const postElement = document.createElement('div');
                 postElement.classList.add('post');
@@ -140,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const singlePostContainer = document.getElementById('single-post-container');
     if (singlePostContainer) {
         var postId = window.location.pathname.split('/')[3];
-        fetch(`http://127.0.0.1:8000/posts/${postId}`)
+        fetch(`/posts/${postId}`)
         .then(response => post = response.json())
         .then(post => {
             singlePostContainer.innerHTML = `
@@ -197,7 +197,7 @@ function saveChanges(postId) {
     console.log('Updated Content:', updatedContent); // Debugging
     debugger;
 
-    fetch(`http://127.0.0.1:8000/posts/${postId}`, {
+    fetch(`/posts/${postId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ function saveChanges(postId) {
 }
 
 function deletePost(postId) {
-    fetch(`http://127.0.0.1:8000/posts/${postId}`, {
+    fetch(`/posts/${postId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${window.sessionStorage.getItem('accessToken')}`
